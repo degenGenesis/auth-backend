@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
+const dbConnect = require('./db/dbConnect');
+
+// connect to database
+dbConnect();
 
 // body parser configuration
 app.use(bodyParser.json());
