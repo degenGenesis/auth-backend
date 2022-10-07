@@ -13,12 +13,12 @@ dbConnect();
 
 // CORS errors header response
 app.use((request, response, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
+  response.setHeader('Access-Control-Allow-Origin', '*');
+  response.setHeader(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization'
   );
-  res.setHeader(
+  response.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, PUT, DELETE, PATCH, OPTIONS'
   );
