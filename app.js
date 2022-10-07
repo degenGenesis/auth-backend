@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const dbConnect = require('./db/dbConnect');
 const User = require('./db/userModel');
+const auth = require('./auth');
 
 // connect to database
 dbConnect();
@@ -119,7 +120,7 @@ app.get("/free-endpoint", (request, response) => {
 });
 
 // protected endpoint
-app.get("/auth-endpoint", (request, response) => {
+app.get("/auth-endpoint", auth, (request, response) => {
   response.json({ message: "You are authorized to access me" });
 });
 
