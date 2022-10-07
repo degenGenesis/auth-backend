@@ -12,11 +12,11 @@ dbConnect();
 
 // body parser configuration
 app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (request, response, next) => {
-  response.json({ message: "Hey! This is your server response!" });
-  next();
+response.json({ message: "Hey! This is your server response!" });
+next();
 });
 
 // register endpoint
@@ -34,14 +34,14 @@ app.post("/register", (request, response) => {
       // save the new user
       user
         .save()
-        // return success if the new user is added to the database successfully
+        // on add user success
         .then((result) => {
           response.status(201).send({
             message: "User Created Successfully",
             result,
           });
         })
-        // catch error if the new user wasn't added successfully to the database
+        // on add user reject 
         .catch((error) => {
           response.status(500).send({
             message: "Error creating user",
@@ -49,7 +49,7 @@ app.post("/register", (request, response) => {
           });
         });
     })
-    // catch error if the password hash isn't successful
+    // on hash reject
     .catch((e) => {
       response.status(500).send({
         message: "Password was not hashed successfully",
@@ -63,15 +63,15 @@ app.post("/login", (request, response) => {
   // check if email exists
   User.findOne({ email: request.body.email })
 
-    // if email exists
+    // on email success
     .then((user) => {
       // compare the password entered and the hashed password
       bcrypt
         .compare(request.body.password, user.password)
 
-        // if the passwords match, proceed to token generation
+        // on pw success, proceed to token generation
         .then((passwordCheck) => {
-
+          // on pw reject
           if(!passwordCheck) {
             return response.status(400).send({
               message: "Incorrect password",
@@ -111,6 +111,16 @@ app.post("/login", (request, response) => {
         e,
       });
     });
+});
+
+// unprotected endpoint
+app.get("/free-endpoint", (request, response) => {
+  response.json({ message: "You are free to access me anytime" });
+});
+
+// protected endpoint
+app.get("/auth-endpoint", (request, response) => {
+  response.json({ message: "You are authorized to access me" });
 });
 
 module.exports = app;
