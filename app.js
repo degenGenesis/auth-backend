@@ -1,8 +1,8 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const dbConnect = require('./db/dbConnect');
 const User = require('./db/userModel');
@@ -19,31 +19,42 @@ app.get("/", (request, response, next) => {
   next();
 });
 
-app.post('/register', (request, response) => {
-  // hash password
+// register endpoint
+app.post("/register", (request, response) => {
+  // hash the password
   bcrypt
     .hash(request.body.password, 10)
     .then((hashedPassword) => {
-      // create new user
+      // create a new user instance and collect the data
       const user = new User({
         email: request.body.email,
         password: hashedPassword,
       });
 
+      // save the new user
       user
         .save()
+        // return success if the new user is added to the database successfully
         .then((result) => {
           response.status(201).send({
-            message: 'User created successfully!',
+            message: "User Created Successfully",
             result,
           });
         })
+        // catch error if the new user wasn't added successfully to the database
         .catch((error) => {
           response.status(500).send({
-            message: 'Password was not hashed correctly',
+            message: "Error creating user",
             error,
           });
         });
+    })
+    // catch error if the password hash isn't successful
+    .catch((e) => {
+      response.status(500).send({
+        message: "Password was not hashed successfully",
+        e,
+      });
     });
 });
 
@@ -54,17 +65,16 @@ app.post("/login", (request, response) => {
 
     // if email exists
     .then((user) => {
-      // compare the password entered and the hashed password found
+      // compare the password entered and the hashed password
       bcrypt
         .compare(request.body.password, user.password)
 
-        // if the passwords match
+        // if the passwords match, proceed to token generation
         .then((passwordCheck) => {
 
-          // check if password matches
           if(!passwordCheck) {
             return response.status(400).send({
-              message: "Passwords does not match",
+              message: "Incorrect password",
               error,
             });
           }
@@ -79,22 +89,22 @@ app.post("/login", (request, response) => {
             { expiresIn: "24h" }
           );
 
-          //   return success response
+          //   on email success response
           response.status(200).send({
             message: "Login Successful",
             email: user.email,
             token,
           });
         })
-        // catch error if password do not match
+        // on pw reject response
         .catch((error) => {
           response.status(400).send({
-            message: "Passwords does not match",
+            message: "Incorrect password",
             error,
           });
         });
     })
-    // catch error if email does not exist
+    // on email reject response
     .catch((e) => {
       response.status(404).send({
         message: "Email not found",
