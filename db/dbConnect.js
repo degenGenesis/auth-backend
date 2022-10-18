@@ -11,7 +11,6 @@ async function dbConnect() {
         // options ensuring proper connection
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useCreateIndex: true,
       }
     )
     .then(() => {
