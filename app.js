@@ -47,8 +47,7 @@ app.post("/register", (request, response) => {
       });
 
       // save the new user
-      user
-        .save()
+      user.save()
         // on add user success
         .then((result) => {
           response.status(201).send({
@@ -60,7 +59,7 @@ app.post("/register", (request, response) => {
         .catch((error) => {
           response.status(500).send({
             message: "Error creating user",
-            error,
+            error
           });
         });
     })
