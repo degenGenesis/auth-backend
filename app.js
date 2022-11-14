@@ -127,6 +127,12 @@ app.post("/login", (request, response) => {
     });
 });
 
+app.post('/reset', auth, (request, response) => {
+  // check if email exists in db
+  User.findOne({ email: request.body.email });
+  user ? response.status(200).send({ message: 'Password reset link sent' }) : response.status(404).send({ message: 'No record of that email exists' });
+})
+
 // unprotected endpoint
 app.get("/free-endpoint", (request, response) => {
   response.json({ message: "You are free to access me anytime" });
