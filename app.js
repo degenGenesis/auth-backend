@@ -129,8 +129,21 @@ app.post("/login", (request, response) => {
 
 app.post('/reset', auth, (request, response) => {
   // check if email exists in db
-  User.findOne({ email: request.body.email });
-  user ? response.status(200).send({ message: 'Password reset link sent' }) : response.status(404).send({ message: 'No record of that email exists' });
+  User.findOne({ email: request.body.email })
+  // user ? response.status(200).send({ message: 'Password reset link sent' }) : response.status(404).send({ message: 'No record of that email exists' });
+
+  // send email with reset link
+  .then((user) => {
+    // generate reset token
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        userEmail: user.email,
+      },
+      "RANDOM-TOKEN",
+      { expiresIn : '24h' } 
+    );
+    
 })
 
 // unprotected endpoint
