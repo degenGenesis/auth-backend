@@ -141,10 +141,20 @@ app.post('/reset', auth, (request, response) => {
           userEmail: user.email,
         },
         "RANDOM-TOKEN",
-        { expiresIn : '24h' }
-      
-      );      
+        { expiresIn : '24h' }      
+      );
+      response.status(200).send({
+        message: 'Password reset link sent',
+        token,
+      })      
   })
+  // on email reject response
+  .catch((e) => {
+    response.status(404).send({
+      message: "Email not found",
+      e,
+    });
+  });
 });
 
 // unprotected endpoint
