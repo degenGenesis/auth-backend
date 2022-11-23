@@ -132,7 +132,7 @@ app.post('/reset', auth, (request, response) => {
     User.findOne({ email: request.body.email })
     // user ? response.status(200).send({ message: 'Password reset link sent' }) : response.status(404).send({ message: 'No record of that email exists' });
 
-    // send email with reset link
+    // on email success
     .then(user => {
       // generate reset token
       const token = jwt.sign(
