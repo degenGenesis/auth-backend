@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 
-// authenticate endpoint
+// authentication verification
 module.exports = async (request, response, next) => {
   try {
-    // request authentication token from authorization header
+    // abstract authentication token from authorization header
     const token = await request.headers.authorization.split(' ')[1];
     // verify token
     const decodedToken = await jwt.verify(
